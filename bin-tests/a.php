@@ -6,6 +6,7 @@ use wapmorgan\MiniThreader\Threads;
 
 $client = new Packagist\Api\Client();
 $packages = $client->all();
+$total = count($packages);
 
 $threads = new Threads(function (Threads $threads, array $payload) use ($client) {
     fwrite(STDOUT, 'My load: '.count($payload).PHP_EOL);
@@ -29,5 +30,15 @@ $per_thread = ceil($total / $cores);
 for ($i = 0; $i < 4; $i++) {
     $threads->setPayload($i, array_slice($packages, $per_thread * $ordinal, $per_thread, true));
 }
-$threads->runThreads();
+$running_threads = $threads->runThreads();
 
+while (count($running_threads) > 0) {
+    foreach ($running_threads as $_i => $thread) {
+        if (!$thread->stillWorking())
+            unset($running_threads[$_i]);
+    }
+    $sum = array_sum($threads->storage->retrieve());
+    $prog = round($sum * 100 / $total);
+    echo "\r".$sum.' ('.$prog.'%)';
+    sleep(1);
+}

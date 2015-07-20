@@ -57,9 +57,9 @@ $threads->useCommonStorage();
 And in code of threads use `$storage` property.
 ``` php
 function (Threads $threads, $payload) {
-  $data = $threads->retrieveAndLock();
+  $data = $threads->storage->retrieveAndLock();
   $data += 1;
-  $threads->storeAndUnlock($data);
+  $threads->storage->storeAndUnlock($data);
 }
 ```
 After finishing all threads, grab result.

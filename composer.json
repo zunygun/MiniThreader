@@ -1,0 +1,16 @@
+{
+    "name": "wapmorgan/mini-threader",
+    "autoload": {
+        "psr-4": {
+            "wapmorgan\\MiniThreader\\": "src/"
+        },
+        "files": ["src/sem.php"]
+    },
+    "require": {
+        "ext-pcntl": "*"
+    },
+    "suggest": {
+        "ext-shmop": "For using CommonStorage",
+        "ext-sem": "For using semaphores provided by OS"
+    }
+}

@@ -4,7 +4,7 @@ require __DIR__.'/../vendor/autoload.php';
 use wapmorgan\MiniThreader\Thread;
 use wapmorgan\MiniThreader\Threads;
 
-$threads = new Threads(function (Threads $threads, array $payload) {
+$threads = new Threads(function (Threads $threads, $payload) {
     fwrite(STDOUT, 'I am child: '.getmypid().PHP_EOL);
     sleep(rand(1, 3));
     $data = $threads->storage->retrieveAndLock();
@@ -12,7 +12,12 @@ $threads = new Threads(function (Threads $threads, array $payload) {
     $threads->storage->storeAndUnlock($data);
     fwrite(STDOUT, '- Child '.getmypid().' done'.PHP_EOL);
 });
+$threads->useCommonStorage();
 $threads->setThreadsNumber(4);
+$threads->setPayload(0, 1);
+$threads->setPayload(1, 1);
+$threads->setPayload(2, 1);
+$threads->setPayload(3, 1);
 
 $running_threads = $threads->runThreads();
 

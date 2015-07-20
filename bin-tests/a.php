@@ -14,10 +14,10 @@ $threads = new Threads(function (Threads $threads, array $payload) use ($client)
         try {
             $details = $client->get($my_package);
             $type = $details->getType();
-            $data = $threads->storage->retrieve();
+            $data = $threads->storage->retrieveAndLock();
             if (isset($data[$type])) $data[$type]++;
             else $data[$type] = 1;
-            $threads->storage->store($data);
+            $threads->storage->storeAndUnlock($data);
         } catch (ClientErrorResponseException $e) {
             fwrite(STDOUT, "\n".'Error code: '.$e->getCode().' on package '.$package."\n");
         }

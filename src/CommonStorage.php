@@ -7,6 +7,7 @@ class CommonStorage {
     protected $key;
     protected $memory;
     protected $initialValue;
+    protected $sem;
 
     /**
      * @param string $path Path of calling script
@@ -17,6 +18,7 @@ class CommonStorage {
         $this->key = ftok($path, $alphabet[array_rand($alphabet)]);
         $this->memory = shmop_open($this->key, 'c', 0644, strlen(serialize($initialValue)));
         $this->initialValue = $initialValue;
+        $this->semaphore = sem_get($this->key);
 
         $this->store($initialValue);
     }
@@ -36,6 +38,11 @@ class CommonStorage {
             return unserialize($data);
     }
 
+    public function retrieveAndLock() {
+        sem_acquire($this->semaphore);
+        return $this->retrieve();
+    }
+
     /**
      * @param mixed $value Data to store
      */
@@ -48,11 +55,20 @@ class CommonStorage {
         shmop_write($this->memory, $serialized, 0);
     }
 
+    /**
+     * @param mixed $value Data to store
+     */
+    public function storeAndUnlock($value) {
+        $this->store($value);
+        sem_release($this->semaphore);
+    }
+
     protected function expand($newsize) {
-        $sem = sem_get($this->key);
-        sem_acquire($sem);
+        sem_acquire($this->semaphore);
+
         shmop_delete($this->memory);
         $this->memory = shmop_open($this->key, 'c', 0644, $newsize);
-        sem_release($sem);
+
+        sem_release($this->semaphore);
     }
 }

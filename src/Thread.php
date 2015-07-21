@@ -11,12 +11,11 @@ class Thread {
     }
 
     public function stillWorking() {
-        return pcntl_waitpid($this->pid, WNOHANG) === 0;
+        return pcntl_waitpid($this->pid, $status, WNOHANG) === 0;
     }
 
     public function getExitStatus() {
-        $status = pcntl_waitpid($this->pid, WNOHANG);
-        if ($status <= 0)
+        if (pcntl_waitpid($this->pid, $status, WNOHANG) <= 0)
             return false;
         return pcntl_wexitstatus($status);
     }

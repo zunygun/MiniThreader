@@ -63,7 +63,20 @@ class Threads {
         return $this->threads[$n]->stillWorking();
     }
 
-    public function useCommonStorage($path) {
+    public function useCommonStorage($path = null) {
+        if ($path === null) {
+            if (version_compare(PHP_VERSION, '5.3.6', '<')) {
+                $trace = debug_backtrace(false);
+                $trace = $trace[0];
+            } else if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+                $trace = debug_backtrace(0);
+                $trace = $trace[0];
+            } else {
+                $trace = debug_backtrace(0, 1);
+                $trace = $trace[0];
+            }
+            $path = $trace['file'];
+        }
         $this->storage = new CommonStorage($path, array());
     }
 }

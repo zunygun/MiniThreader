@@ -77,6 +77,6 @@ class Threads {
             }
             $path = $trace['file'];
         }
-        $this->storage = new CommonStorage($path, array());
+        $this->storage = new CommonStorage($path, array(), getmypid());
     }
 }

@@ -6,7 +6,7 @@ use wapmorgan\MiniThreader\Threads;
 
 $threads = new Threads(function (Threads $threads, $payload) {
     fwrite(STDOUT, 'I am child: '.getmypid().PHP_EOL);
-    sleep(rand(1, 3));
+    sleep(getmypid() % 4);
     $data = $threads->storage->retrieveAndLock();
     $data[] = getmypid();
     $threads->storage->storeAndUnlock($data);

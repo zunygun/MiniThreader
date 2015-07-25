@@ -26,6 +26,8 @@ while (count($running_threads) > 0) {
         if (!$thread->stillWorking())
             unset($running_threads[$_i]);
     }
+    echo 'Total children still running: '.count($running_threads).PHP_EOL;
     sleep(1);
 }
+var_dump($threads->storage->retrieve());
 echo 'All children done'.PHP_EOL;

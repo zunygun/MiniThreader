@@ -7,7 +7,7 @@ class CommonStorage {
     protected $key;
     protected $memory;
     protected $initialValue;
-    protected $sem;
+    protected $semaphore;
 
     /**
      * @param string $path Path of calling script
@@ -16,11 +16,8 @@ class CommonStorage {
     public function __construct($path, $initialValue = 0) {
         $alphabet = range('a', 'z');
         $this->key = ftok($path, $alphabet[array_rand($alphabet)]);
-        $this->memory = shmop_open($this->key, 'c', 0644, strlen(serialize($initialValue)));
         $this->initialValue = $initialValue;
         $this->semaphore = sem_get($this->key);
-
-        $this->store($initialValue);
     }
 
     public function __destruct() {
@@ -31,14 +28,20 @@ class CommonStorage {
      * @return mixed Storage data
      */
     public function retrieve() {
-        $data = trim(shmop_read($this->memory, 0, shmop_size($this->memory)));
+	echo getmypid().'Retrieved'.PHP_EOL;
+        if ($this->memory === null)
+            $this->open();
+	$result = shmop_read($this->memory, 0, shmop_size($this->memory));
+	var_dump($result);
+        $data = trim($result);
         if (empty($data))
-            $data = $initialValue;
+            $data = $this->initialValue;
         else
             return unserialize($data);
     }
 
     public function retrieveAndLock() {
+	echo getmypid().'Locked'.PHP_EOL;
         sem_acquire($this->semaphore);
         return $this->retrieve();
     }
@@ -47,10 +50,16 @@ class CommonStorage {
      * @param mixed $value Data to store
      */
     public function store($value) {
+	echo getmypid().'Stored'.PHP_EOL;
+	var_dump($value);
         $serialized = serialize($value);
         $size = strlen($serialized);
+        if ($this->memory === null)
+            $this->open();
         if (shmop_size($this->memory) < $size) {
+	    echo 'Expanding size from '.shmop_size($this->memory).' to '.$size.PHP_EOL;
             $this->expand($size);
+	    echo 'New size is '.shmop_size($this->memory).PHP_EOL;
         }
         shmop_write($this->memory, $serialized, 0);
     }
@@ -61,14 +70,24 @@ class CommonStorage {
     public function storeAndUnlock($value) {
         $this->store($value);
         sem_release($this->semaphore);
+	echo getmypid().'Unlocked'.PHP_EOL;
     }
 
     protected function expand($newsize) {
-        sem_acquire($this->semaphore);
+//        sem_acquire($this->semaphore);
 
         shmop_delete($this->memory);
         $this->memory = shmop_open($this->key, 'c', 0644, $newsize);
 
-        sem_release($this->semaphore);
+//        sem_release($this->semaphore);
+    }
+
+    protected function open() {
+        echo getmypid().'Opened'.PHP_EOL;
+        // probe
+        $this->memory = @shmop_open($this->key, 'w', 0, 0);
+        if ($this->memory === false) {
+            $this->memory = shmop_open($this->key, 'c', 0644, strlen(serialize($this->initialValue)));
+        }
     }
 }

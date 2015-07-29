@@ -1,4 +1,6 @@
 # MiniThreader
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wapmorgan/MiniThreader/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/wapmorgan/MiniThreader/?branch=master)
+
 Simple calculations-oriented threading library for PHP
 
 # Structure

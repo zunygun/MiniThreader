@@ -20,7 +20,7 @@ class ThreadsTest extends PHPUnit_Framework_TestCase {
             }
             usleep(200);
         }
-        $result = $threads->storage->retrieve():
+        $result = $threads->storage->retrieve();
 
         $pids = array();
         foreach ($children as $child) {

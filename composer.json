@@ -9,6 +9,9 @@
     "require": {
         "ext-pcntl": "*"
     },
+    "require-dev": {
+        "phpunit/phpunit": "@stable"
+    },
     "suggest": {
         "ext-shmop": "For using CommonStorage",
         "ext-sem": "For using semaphores provided by OS"

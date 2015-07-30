@@ -9,7 +9,8 @@ class ThreadsTest extends PHPUnit_Framework_TestCase {
             $threads->storage->storeAndUnlock($data);
         });
         $threads->useCommonStorage();
-        $threads->setThreadsNumber(rand(2, 4));
+        $threads->storage->store(array());
+        $threads->setThreadsNumber(rand(2, 12));
         $children = $threads->runThreads();
 
         $running = $children;

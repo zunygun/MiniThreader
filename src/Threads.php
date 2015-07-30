@@ -24,7 +24,7 @@ class Threads {
         if ($number <= 0)
             throw new Exception('Negative value can\'t be used as threads number');
         $this->number = $number;
-        $this->payload = array_fill(0, $number, null);
+        $this->payloads = array_fill(0, $number, null);
     }
 
     /**

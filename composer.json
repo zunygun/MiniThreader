@@ -10,7 +10,7 @@
         "ext-pcntl": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "@stable"
+        "phpunit/phpunit": "^4.7"
     },
     "suggest": {
         "ext-shmop": "For using CommonStorage",

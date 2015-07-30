@@ -81,7 +81,11 @@ class CommonStorage {
 
     protected function open() {
         // probe
+        $level = error_reporting();
+        error_reporting(0);
         $this->memory = shmop_open($this->key, 'w', 0, 0);
+        error_reporting($level);
+
         if ($this->memory === false) {
             $this->memory = shmop_open($this->key, 'c', 0666, strlen(serialize($this->initialValue)));
         }

@@ -50,7 +50,10 @@ class Threads {
                 $this->threads[] = new Thread($pid);
             } else {
                 // new thread
-                call_user_func($this->worker, $this, $this->payloads[$i]);
+                if (isset($this->payloads[$i]))
+                    call_user_func($this->worker, $this, $this->payloads[$i]);
+                else
+                    call_user_func($this->worker, $this);
                 exit();
             }
         }

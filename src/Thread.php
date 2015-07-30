@@ -10,6 +10,10 @@ class Thread {
         $this->pid = $pid;
     }
 
+    public function getPid() {
+        return $this->pid;
+    }
+
     public function stillWorking() {
         return pcntl_waitpid($this->pid, $status, WNOHANG) === 0;
     }

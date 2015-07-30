@@ -24,6 +24,7 @@ class Threads {
         if ($number <= 0)
             throw new Exception('Negative value can\'t be used as threads number');
         $this->number = $number;
+        $this->payload = array_fill(0, $number, null);
     }
 
     /**
@@ -50,10 +51,7 @@ class Threads {
                 $this->threads[] = new Thread($pid);
             } else {
                 // new thread
-                if (isset($this->payloads[$i]))
-                    call_user_func($this->worker, $this, $this->payloads[$i]);
-                else
-                    call_user_func($this->worker, $this);
+                call_user_func($this->worker, $this, $this->payloads[$i]);
                 exit();
             }
         }

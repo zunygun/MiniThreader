@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__.'/../vendor/autoload.php';
+
 use wapmorgan\MiniThreader\Threads;
 
 class ThreadsTest extends PHPUnit_Framework_TestCase {

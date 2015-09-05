@@ -1,5 +1,7 @@
 {
     "name": "wapmorgan/mini-threader",
+    "description": "Simple calculations-oriented threading library for PHP",
+    "keywords": ["threads", "forking", "multithreading"],
     "autoload": {
         "psr-4": {
             "wapmorgan\\MiniThreader\\": "src/"

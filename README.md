@@ -68,4 +68,4 @@ After finishing all threads, grab result.
 ``` php
 $data = $threads->storage->retrieve();
 ```
-Also, there's non-blocking analogs: `retrieve()` and `store()`. They're faster cause of not using semaphores, but are not very reliable (data loss is possible if two threads will try to write at the same time).
+Also, there's non-blocking analogs: `retrieve()` and `store()`. They're faster because of not using semaphores, but are not very reliable (data loss is possible if two threads will try to write at the same time).
